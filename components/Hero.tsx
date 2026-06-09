@@ -1,15 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Zap, ArrowRight } from "lucide-react";
+import { Sparkles, Zap, ArrowRight, Instagram } from "lucide-react";
 import Tedhy from "./Tedhy";
+import type { SocialLinks } from "@/lib/types";
 
 interface HeroProps {
   title: string;
   subtitle: string;
+  tedhImageUrl?: string;
+  social?: SocialLinks;
 }
 
-export default function Hero({ title, subtitle }: HeroProps) {
+export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProps) {
   return (
     <section
       id="top"
@@ -70,6 +73,20 @@ export default function Hero({ title, subtitle }: HeroProps) {
             </a>
           </div>
 
+          {social?.instagram && (
+            <a
+              href={social.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-secondary-600 hover:text-secondary-700"
+            >
+              <span className="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white">
+                <Instagram size={15} />
+              </span>
+              Acompanhe o Tedh no Instagram
+            </a>
+          )}
+
           <div className="mt-10 flex flex-wrap gap-8 justify-center lg:justify-start text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
@@ -99,7 +116,7 @@ export default function Hero({ title, subtitle }: HeroProps) {
           className="relative flex items-center justify-center"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary-200 via-secondary-200 to-accent-200 rounded-full blur-3xl opacity-50" />
-          <Tedhy size={420} expression="excited" />
+          <Tedhy size={380} expression="excited" imageUrl={tedhImageUrl} limbs />
 
           {/* Speech bubble */}
           <motion.div

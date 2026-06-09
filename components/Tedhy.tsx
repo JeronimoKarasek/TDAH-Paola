@@ -1,23 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface TedhyProps {
   size?: number;
   expression?: "happy" | "wink" | "excited" | "focused";
   floating?: boolean;
   className?: string;
+  /** Quando o admin envia uma imagem custom do Tedh, ela tem prioridade sobre o SVG */
+  imageUrl?: string | null;
+  /** Mostra bracinhos e perninhas animados (mascote completo) */
+  limbs?: boolean;
 }
 
+/**
+ * Tedh — o cérebro de óculos roxos, mascote oficial do Sintonize TDAH.
+ * Inspirado no personagem-base: cérebro rosa, óculos roxos retangulares,
+ * sorriso simpático. Agora com braços e perninhas animadas (`limbs`).
+ *
+ * Se o admin enviar uma imagem custom (`imageUrl`), ela é exibida no lugar
+ * do SVG — mantendo as animações de flutuar e os braços/pernas opcionais.
+ */
 export default function Tedhy({
   size = 240,
   expression = "happy",
   floating = true,
   className = "",
+  imageUrl = null,
+  limbs = false,
 }: TedhyProps) {
+  // Evita mismatch de hidratação ao escolher imagem custom
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const useCustom = mounted && !!imageUrl;
+
   return (
     <motion.div
-      className={`inline-block ${className}`}
+      className={`relative inline-block ${className}`}
       style={{ width: size, height: size }}
       animate={
         floating
@@ -33,273 +54,290 @@ export default function Tedhy({
         ease: "easeInOut",
       }}
     >
-      <svg
-        viewBox="0 0 240 240"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-2xl"
-      >
-        {/* Glow background */}
-        <defs>
-          <radialGradient id="brainGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fb923c" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#fb923c" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#ffb4a2" />
-            <stop offset="50%" stopColor="#ff8fab" />
-            <stop offset="100%" stopColor="#e879f9" />
-          </linearGradient>
-          <linearGradient id="brainGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#fda4af" />
-            <stop offset="100%" stopColor="#c084fc" />
-          </linearGradient>
-          <radialGradient id="cheekGradient">
-            <stop offset="0%" stopColor="#fb7185" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#fb7185" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+      {/* ===== BRAÇOS (atrás do corpo) ===== */}
+      {limbs && (
+        <>
+          {/* braço esquerdo — acena */}
+          <motion.div
+            className="absolute z-0"
+            style={{
+              left: "-9%",
+              top: "42%",
+              width: "26%",
+              height: "10%",
+              transformOrigin: "100% 50%",
+            }}
+            animate={{ rotate: [10, -28, 10] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Arm flip />
+          </motion.div>
+          {/* braço direito — leve balanço */}
+          <motion.div
+            className="absolute z-0"
+            style={{
+              right: "-9%",
+              top: "46%",
+              width: "26%",
+              height: "10%",
+              transformOrigin: "0% 50%",
+            }}
+            animate={{ rotate: [-8, 12, -8] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Arm />
+          </motion.div>
+        </>
+      )}
 
-        {/* Background glow */}
-        <circle cx="120" cy="120" r="115" fill="url(#brainGlow)" />
-
-        {/* Floating sparkles around brain */}
-        <motion.g
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          style={{ transformOrigin: "120px 120px" }}
-        >
-          <circle cx="30" cy="60" r="3" fill="#facc15" opacity="0.8" />
-          <circle cx="210" cy="80" r="4" fill="#06b6d4" opacity="0.8" />
-          <circle cx="200" cy="180" r="3" fill="#a855f7" opacity="0.8" />
-          <circle cx="40" cy="190" r="3.5" fill="#f97316" opacity="0.8" />
-          <path
-            d="M 25 120 L 28 115 L 31 120 L 28 125 Z"
-            fill="#10b981"
-            opacity="0.7"
-          />
-          <path
-            d="M 215 130 L 218 125 L 221 130 L 218 135 Z"
-            fill="#ff6b6b"
-            opacity="0.7"
-          />
-        </motion.g>
-
-        {/* BRAIN BODY - left hemisphere */}
-        <path
-          d="M 75 95
-             C 60 90, 50 110, 55 130
-             C 45 138, 48 158, 65 165
-             C 70 180, 90 188, 110 180
-             C 115 195, 120 195, 120 195
-             L 120 80
-             C 115 75, 105 73, 95 78
-             C 88 70, 75 75, 75 95 Z"
-          fill="url(#brainGradient)"
-          stroke="#9333ea"
-          strokeWidth="2.5"
-        />
-
-        {/* BRAIN BODY - right hemisphere */}
-        <path
-          d="M 165 95
-             C 180 90, 190 110, 185 130
-             C 195 138, 192 158, 175 165
-             C 170 180, 150 188, 130 180
-             C 125 195, 120 195, 120 195
-             L 120 80
-             C 125 75, 135 73, 145 78
-             C 152 70, 165 75, 165 95 Z"
-          fill="url(#brainGradient2)"
-          stroke="#9333ea"
-          strokeWidth="2.5"
-        />
-
-        {/* Brain wrinkle lines - left */}
-        <path
-          d="M 75 105 Q 90 110, 95 125 Q 85 135, 95 150"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-        <path
-          d="M 65 130 Q 78 138, 75 155"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-        <path
-          d="M 95 95 Q 105 105, 110 115"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.5"
-        />
-
-        {/* Brain wrinkle lines - right */}
-        <path
-          d="M 165 105 Q 150 110, 145 125 Q 155 135, 145 150"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-        <path
-          d="M 175 130 Q 162 138, 165 155"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.6"
-        />
-        <path
-          d="M 145 95 Q 135 105, 130 115"
-          stroke="#9333ea"
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.5"
-        />
-
-        {/* Central division */}
-        <path
-          d="M 120 80 L 120 195"
-          stroke="#9333ea"
-          strokeWidth="2"
-          opacity="0.4"
-        />
-
-        {/* Cheeks */}
-        <ellipse cx="80" cy="150" rx="12" ry="8" fill="url(#cheekGradient)" />
-        <ellipse cx="160" cy="150" rx="12" ry="8" fill="url(#cheekGradient)" />
-
-        {/* GLASSES - left lens */}
-        <circle
-          cx="92"
-          cy="128"
-          r="22"
-          fill="white"
-          fillOpacity="0.85"
-          stroke="#1f2937"
-          strokeWidth="3.5"
-        />
-        {/* Glasses reflection */}
-        <ellipse
-          cx="86"
-          cy="122"
-          rx="6"
-          ry="4"
-          fill="white"
-          opacity="0.9"
-          transform="rotate(-20 86 122)"
-        />
-
-        {/* GLASSES - right lens */}
-        <circle
-          cx="148"
-          cy="128"
-          r="22"
-          fill="white"
-          fillOpacity="0.85"
-          stroke="#1f2937"
-          strokeWidth="3.5"
-        />
-        <ellipse
-          cx="142"
-          cy="122"
-          rx="6"
-          ry="4"
-          fill="white"
-          opacity="0.9"
-          transform="rotate(-20 142 122)"
-        />
-
-        {/* Glasses bridge */}
-        <path
-          d="M 114 128 Q 120 124, 126 128"
-          stroke="#1f2937"
-          strokeWidth="3.5"
-          fill="none"
-          strokeLinecap="round"
-        />
-
-        {/* EYES - with blinking animation */}
-        <motion.g
-          animate={{
-            scaleY: expression === "wink" ? [1, 1, 1, 1] : [1, 1, 0.1, 1],
-          }}
-          transition={{
-            duration: 4,
-            times: [0, 0.92, 0.95, 1],
-            repeat: Infinity,
-          }}
-          style={{ transformOrigin: "92px 128px" }}
-        >
-          <circle cx="92" cy="128" r="7" fill="#1f2937" />
-          <circle cx="94" cy="125" r="2.5" fill="white" />
-          <circle cx="90" cy="131" r="1.2" fill="white" />
-        </motion.g>
-
-        <motion.g
-          animate={{
-            scaleY:
-              expression === "wink" ? [1, 0.1, 1, 1, 1] : [1, 1, 0.1, 1],
-          }}
-          transition={{
-            duration: 4,
-            times:
-              expression === "wink"
-                ? [0, 0.1, 0.2, 0.95, 1]
-                : [0, 0.92, 0.95, 1],
-            repeat: Infinity,
-          }}
-          style={{ transformOrigin: "148px 128px" }}
-        >
-          <circle cx="148" cy="128" r="7" fill="#1f2937" />
-          <circle cx="150" cy="125" r="2.5" fill="white" />
-          <circle cx="146" cy="131" r="1.2" fill="white" />
-        </motion.g>
-
-        {/* MOUTH - smile */}
-        {expression === "excited" ? (
-          <path
-            d="M 105 165 Q 120 180, 135 165 Q 135 175, 120 178 Q 105 175, 105 165 Z"
-            fill="#1f2937"
+      {/* ===== CORPO (SVG ou imagem custom) ===== */}
+      <div className="relative z-10 w-full h-full">
+        {useCustom ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageUrl!}
+            alt="Tedh, o mascote do Sintonize TDAH"
+            className="w-full h-full object-contain drop-shadow-2xl"
           />
         ) : (
-          <path
-            d="M 105 165 Q 120 178, 135 165"
-            stroke="#1f2937"
-            strokeWidth="3"
-            fill="none"
-            strokeLinecap="round"
-          />
+          <BrainSvg expression={expression} />
         )}
+      </div>
 
-        {/* Lightbulb idea on top */}
-        <motion.g
-          animate={{
-            scale: [1, 1.15, 1],
-            opacity: [0.8, 1, 0.8],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ transformOrigin: "120px 50px" }}
-        >
-          <circle cx="120" cy="50" r="12" fill="#facc15" />
-          <rect x="116" y="60" width="8" height="4" fill="#9ca3af" rx="1" />
-          <path
-            d="M 110 45 L 105 40 M 130 45 L 135 40 M 120 36 L 120 30"
-            stroke="#facc15"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-        </motion.g>
-      </svg>
+      {/* ===== PERNAS (à frente, na base) ===== */}
+      {limbs && (
+        <>
+          {/* perna esquerda */}
+          <motion.div
+            className="absolute z-20"
+            style={{
+              left: "30%",
+              bottom: "-12%",
+              width: "9%",
+              height: "20%",
+              transformOrigin: "50% 0%",
+            }}
+            animate={{ rotate: [-6, 8, -6] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Leg />
+          </motion.div>
+          {/* perna direita */}
+          <motion.div
+            className="absolute z-20"
+            style={{
+              right: "30%",
+              bottom: "-12%",
+              width: "9%",
+              height: "20%",
+              transformOrigin: "50% 0%",
+            }}
+            animate={{ rotate: [8, -6, 8] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Leg />
+          </motion.div>
+        </>
+      )}
     </motion.div>
+  );
+}
+
+/* ---------------- Braço ---------------- */
+function Arm({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 100 40"
+      className="w-full h-full"
+      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+    >
+      {/* braço */}
+      <path
+        d="M 5 20 Q 45 8, 78 18"
+        stroke="#9333ea"
+        strokeWidth="9"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 5 20 Q 45 8, 78 18"
+        stroke="#c084fc"
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* mãozinha */}
+      <circle cx="82" cy="18" r="13" fill="#ff8fab" stroke="#9333ea" strokeWidth="3" />
+    </svg>
+  );
+}
+
+/* ---------------- Perna ---------------- */
+function Leg() {
+  return (
+    <svg viewBox="0 0 40 100" className="w-full h-full">
+      {/* perna */}
+      <path
+        d="M 20 0 L 20 70"
+        stroke="#9333ea"
+        strokeWidth="10"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 20 0 L 20 70"
+        stroke="#c084fc"
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+      {/* tênis */}
+      <path
+        d="M 8 72 Q 8 88, 22 88 L 36 88 Q 38 78, 28 72 Z"
+        fill="#06b6d4"
+        stroke="#0e7490"
+        strokeWidth="3"
+      />
+      <path d="M 10 84 L 36 84" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/* ---------------- Cérebro (rosto) ---------------- */
+function BrainSvg({ expression }: { expression: TedhyProps["expression"] }) {
+  return (
+    <svg
+      viewBox="0 0 240 240"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full drop-shadow-2xl"
+    >
+      <defs>
+        <radialGradient id="brainGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fb7185" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#fb7185" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ff9a8b" />
+          <stop offset="100%" stopColor="#fb6f92" />
+        </linearGradient>
+        <radialGradient id="cheekGradient">
+          <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#f43f5e" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Glow de fundo */}
+      <circle cx="120" cy="120" r="115" fill="url(#brainGlow)" />
+
+      {/* Sparkles girando */}
+      <motion.g
+        animate={{ rotate: 360 }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        style={{ transformOrigin: "120px 120px" }}
+      >
+        <circle cx="30" cy="60" r="3" fill="#facc15" opacity="0.85" />
+        <circle cx="210" cy="80" r="4" fill="#06b6d4" opacity="0.85" />
+        <circle cx="200" cy="180" r="3" fill="#a855f7" opacity="0.85" />
+        <circle cx="40" cy="190" r="3.5" fill="#f97316" opacity="0.85" />
+      </motion.g>
+
+      {/* ===== CÉREBRO (contorno arredondado e enrugado) ===== */}
+      <path
+        d="M 120 48
+           C 150 40, 178 52, 188 78
+           C 208 84, 212 112, 198 128
+           C 206 146, 196 170, 174 174
+           C 168 192, 144 200, 126 190
+           C 116 198, 96 196, 90 182
+           C 66 184, 48 166, 54 144
+           C 38 134, 38 106, 56 96
+           C 58 70, 84 56, 104 64
+           C 110 52, 116 48, 120 48 Z"
+        fill="url(#brainGradient)"
+        stroke="#6b21a8"
+        strokeWidth="4"
+        strokeLinejoin="round"
+      />
+
+      {/* Divisão central */}
+      <path
+        d="M 120 52 Q 116 100, 122 150 Q 124 175, 120 190"
+        stroke="#6b21a8"
+        strokeWidth="3"
+        fill="none"
+        opacity="0.55"
+        strokeLinecap="round"
+      />
+
+      {/* Rugas do cérebro - esquerda */}
+      <path d="M 70 90 Q 86 100, 80 118 Q 92 128, 82 146" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+      <path d="M 58 122 Q 74 130, 70 150" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+      <path d="M 96 70 Q 104 84, 100 98" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.45" />
+      <path d="M 78 165 Q 92 168, 100 178" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.45" />
+
+      {/* Rugas do cérebro - direita */}
+      <path d="M 170 90 Q 154 100, 160 118 Q 148 128, 158 146" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+      <path d="M 184 124 Q 168 132, 172 152" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+      <path d="M 146 70 Q 138 84, 142 98" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.45" />
+      <path d="M 160 168 Q 148 172, 140 182" stroke="#6b21a8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.45" />
+
+      {/* Bochechas */}
+      <ellipse cx="78" cy="150" rx="12" ry="8" fill="url(#cheekGradient)" />
+      <ellipse cx="162" cy="150" rx="12" ry="8" fill="url(#cheekGradient)" />
+
+      {/* ===== ÓCULOS ROXOS (retangulares, como o print) ===== */}
+      {/* lente esquerda */}
+      <rect x="64" y="108" width="46" height="38" rx="12" fill="white" fillOpacity="0.92" stroke="#7c3aed" strokeWidth="6" />
+      {/* lente direita */}
+      <rect x="130" y="108" width="46" height="38" rx="12" fill="white" fillOpacity="0.92" stroke="#7c3aed" strokeWidth="6" />
+      {/* ponte */}
+      <path d="M 110 120 Q 120 114, 130 120" stroke="#7c3aed" strokeWidth="6" fill="none" strokeLinecap="round" />
+      {/* hastes */}
+      <path d="M 64 120 L 50 116" stroke="#7c3aed" strokeWidth="6" strokeLinecap="round" />
+      <path d="M 176 120 L 190 116" stroke="#7c3aed" strokeWidth="6" strokeLinecap="round" />
+
+      {/* ===== OLHOS (com piscar) ===== */}
+      <motion.g
+        animate={{ scaleY: [1, 1, 0.1, 1] }}
+        transition={{ duration: 4, times: [0, 0.92, 0.95, 1], repeat: Infinity }}
+        style={{ transformOrigin: "87px 127px" }}
+      >
+        <circle cx="87" cy="127" r="9" fill="#1f2937" />
+        <circle cx="90" cy="123" r="3" fill="white" />
+        <circle cx="84" cy="130" r="1.4" fill="white" />
+      </motion.g>
+
+      <motion.g
+        animate={{
+          scaleY: expression === "wink" ? [1, 0.1, 1, 1, 1] : [1, 1, 0.1, 1],
+        }}
+        transition={{
+          duration: 4,
+          times: expression === "wink" ? [0, 0.1, 0.2, 0.95, 1] : [0, 0.92, 0.95, 1],
+          repeat: Infinity,
+        }}
+        style={{ transformOrigin: "153px 127px" }}
+      >
+        <circle cx="153" cy="127" r="9" fill="#1f2937" />
+        <circle cx="156" cy="123" r="3" fill="white" />
+        <circle cx="150" cy="130" r="1.4" fill="white" />
+      </motion.g>
+
+      {/* ===== SORRISO ===== */}
+      {expression === "excited" ? (
+        <path d="M 102 158 Q 120 178, 138 158 Q 138 172, 120 176 Q 102 172, 102 158 Z" fill="#6b21a8" />
+      ) : (
+        <path d="M 104 160 Q 120 176, 136 160" stroke="#6b21a8" strokeWidth="4" fill="none" strokeLinecap="round" />
+      )}
+
+      {/* Lâmpada de ideia */}
+      <motion.g
+        animate={{ scale: [1, 1.15, 1], opacity: [0.85, 1, 0.85] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        style={{ transformOrigin: "120px 36px" }}
+      >
+        <circle cx="120" cy="36" r="11" fill="#facc15" />
+        <rect x="116" y="45" width="8" height="4" fill="#9ca3af" rx="1" />
+        <path d="M 108 32 L 103 27 M 132 32 L 137 27 M 120 23 L 120 17" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+      </motion.g>
+    </svg>
   );
 }

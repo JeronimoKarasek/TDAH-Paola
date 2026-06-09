@@ -34,9 +34,15 @@ import {
   Mail,
   CheckCircle2,
   XCircle,
+  Image as ImageIcon,
+  Upload,
+  Share2,
+  Instagram,
+  Youtube,
+  Clock,
 } from "lucide-react";
 import Tedhy from "@/components/Tedhy";
-import { Plan } from "@/lib/types";
+import { Plan, ScheduledPost, SocialLinks, SocialPlatform } from "@/lib/types";
 
 const COLORS = ["#f97316", "#a855f7", "#06b6d4", "#facc15", "#10b981", "#ef4444", "#8b5cf6", "#ec4899"];
 
@@ -65,17 +71,35 @@ interface ConfigState {
   plans: Plan[];
   heroTitle: string;
   heroSubtitle: string;
+  tedhImageUrl: string;
+  social: SocialLinks;
+  posts: ScheduledPost[];
 }
+
+type TabId =
+  | "overview"
+  | "visitors"
+  | "leads"
+  | "tedh"
+  | "social"
+  | "schedule"
+  | "config";
 
 export default function AdminDashboard({ user }: { user: string }) {
   const router = useRouter();
-  const [tab, setTab] = useState<"overview" | "visitors" | "leads" | "config">("overview");
+  const [tab, setTab] = useState<TabId>("overview");
   const [stats, setStats] = useState<Stats | null>(null);
   const [leads, setLeads] = useState<any[]>([]);
   const [config, setConfig] = useState<ConfigState | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+
+  function flash(type: "ok" | "err", text: string) {
+    setSaveMsg({ type, text });
+    setTimeout(() => setSaveMsg(null), 4000);
+  }
 
   async function loadStats() {
     setLoading(true);
@@ -122,6 +146,7 @@ export default function AdminDashboard({ user }: { user: string }) {
         plans: config.plans,
         heroTitle: config.heroTitle,
         heroSubtitle: config.heroSubtitle,
+        social: config.social,
       };
       // Only send api key if it's not masked
       if (!config.asaasApiKey.includes("…") && config.asaasApiKey.trim()) {
@@ -145,6 +170,68 @@ export default function AdminDashboard({ user }: { user: string }) {
       setSaving(false);
       setTimeout(() => setSaveMsg(null), 4000);
     }
+  }
+
+  // ===== Upload da imagem do Tedh =====
+  async function uploadTedhImage(file: File) {
+    if (!config) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.ok) {
+        setConfig({ ...config, tedhImageUrl: data.tedhImageUrl });
+        flash("ok", "Imagem do Tedh atualizada! 🧠✨");
+      } else {
+        flash("err", data.error || "Falha no upload.");
+      }
+    } catch (e: any) {
+      flash("err", e.message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function removeTedhImage() {
+    if (!config) return;
+    const res = await fetch("/api/admin/upload", { method: "DELETE" });
+    const data = await res.json();
+    if (data.ok) {
+      setConfig({ ...config, tedhImageUrl: "" });
+      flash("ok", "Voltamos ao Tedh original (SVG animado).");
+    }
+  }
+
+  // ===== Agendamento de postagens =====
+  async function createPost(post: Partial<ScheduledPost>) {
+    const res = await fetch("/api/admin/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(post),
+    });
+    const data = await res.json();
+    if (data.ok && config) {
+      setConfig({ ...config, posts: data.posts });
+      flash("ok", "Postagem agendada! 📅");
+    } else flash("err", data.error || "Erro ao agendar.");
+  }
+
+  async function updatePost(post: ScheduledPost) {
+    const res = await fetch("/api/admin/posts", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(post),
+    });
+    const data = await res.json();
+    if (data.ok && config) setConfig({ ...config, posts: data.posts });
+  }
+
+  async function deletePost(id: string) {
+    const res = await fetch(`/api/admin/posts?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.ok && config) setConfig({ ...config, posts: data.posts });
   }
 
   function updatePlan(idx: number, key: keyof Plan, value: any) {
@@ -217,6 +304,9 @@ export default function AdminDashboard({ user }: { user: string }) {
             { id: "overview", label: "Visão geral", icon: TrendingUp },
             { id: "visitors", label: "Visitantes", icon: Users },
             { id: "leads", label: "Leads / Vendas", icon: Mail },
+            { id: "tedh", label: "Tedh (mascote)", icon: ImageIcon },
+            { id: "social", label: "Redes sociais", icon: Share2 },
+            { id: "schedule", label: "Agendamento", icon: Calendar },
             { id: "config", label: "Configurações", icon: Settings },
           ].map((t) => {
             const Icon = t.icon;
@@ -420,6 +510,118 @@ export default function AdminDashboard({ user }: { user: string }) {
           </div>
         )}
 
+        {/* ===== TEDH (upload de imagem) ===== */}
+        {tab === "tedh" && config && (
+          <div className="space-y-6 max-w-3xl">
+            {saveMsg && (
+              <div className={`rounded-xl px-4 py-3 text-sm flex items-center gap-2 ${saveMsg.type === "ok" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+                {saveMsg.type === "ok" ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                {saveMsg.text}
+              </div>
+            )}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-display font-bold text-lg mb-1 flex items-center gap-2">
+                <ImageIcon size={20} className="text-primary-500" /> Imagem oficial do Tedh
+              </h3>
+              <p className="text-sm text-gray-500 mb-6">
+                Envie uma imagem do Tedh para substituir o mascote em todo o site
+                (PNG, JPG, WEBP, GIF ou SVG — máx. 2MB). Deixe vazio para usar o
+                Tedh animado padrão.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-6 items-center">
+                <div className="w-44 h-44 rounded-3xl bg-gradient-to-br from-orange-50 to-purple-50 ring-2 ring-gray-100 flex items-center justify-center p-3">
+                  <Tedhy size={150} floating={false} imageUrl={config.tedhImageUrl} />
+                </div>
+
+                <div className="flex-1 space-y-3">
+                  <label className="btn-primary cursor-pointer !py-3 inline-flex">
+                    <Upload size={18} />
+                    {uploading ? "Enviando..." : "Enviar nova imagem"}
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+                      className="hidden"
+                      disabled={uploading}
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        if (f) uploadTedhImage(f);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  {config.tedhImageUrl && (
+                    <button
+                      onClick={removeTedhImage}
+                      className="block text-sm text-red-500 hover:text-red-600 font-medium inline-flex items-center gap-1"
+                    >
+                      <Trash2 size={15} /> Remover imagem e voltar ao Tedh padrão
+                    </button>
+                  )}
+                  <p className="text-xs text-gray-400">
+                    💡 Dica: use uma imagem com fundo transparente (PNG) para o
+                    Tedh ficar perfeito sobre qualquer fundo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===== REDES SOCIAIS ===== */}
+        {tab === "social" && config && (
+          <div className="space-y-6 max-w-3xl">
+            {saveMsg && (
+              <div className={`rounded-xl px-4 py-3 text-sm flex items-center gap-2 ${saveMsg.type === "ok" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+                {saveMsg.type === "ok" ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                {saveMsg.text}
+              </div>
+            )}
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="font-display font-bold text-lg mb-1 flex items-center gap-2">
+                <Share2 size={20} className="text-secondary-500" /> Links das redes sociais
+              </h3>
+              <p className="text-sm text-gray-500 mb-5">
+                Estes links aparecem nos botões do site (navbar, hero, rodapé).
+              </p>
+              <div className="space-y-4">
+                {([
+                  { key: "instagram", label: "Instagram", placeholder: "https://www.instagram.com/sintonize_tdah/" },
+                  { key: "youtube", label: "YouTube", placeholder: "https://youtube.com/@seucanal" },
+                  { key: "tiktok", label: "TikTok", placeholder: "https://tiktok.com/@seuperfil" },
+                  { key: "whatsapp", label: "WhatsApp", placeholder: "https://wa.me/55..." },
+                  { key: "email", label: "E-mail de contato", placeholder: "contato@sintonizetdah.com.br" },
+                ] as const).map((f) => (
+                  <div key={f.key}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
+                    <input
+                      type="text"
+                      value={(config.social as any)[f.key] || ""}
+                      onChange={(e) => setConfig({ ...config, social: { ...config.social, [f.key]: e.target.value } })}
+                      placeholder={f.placeholder}
+                      className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 focus:border-secondary-500 outline-none text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+              <button onClick={saveConfig} disabled={saving} className="btn-primary mt-6 !py-3">
+                <Save size={18} /> {saving ? "Salvando..." : "Salvar redes sociais"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ===== AGENDAMENTO DE POSTAGENS ===== */}
+        {tab === "schedule" && config && (
+          <ScheduleTab
+            posts={config.posts}
+            onCreate={createPost}
+            onUpdate={updatePost}
+            onDelete={deletePost}
+            saveMsg={saveMsg}
+          />
+        )}
+
         {/* ===== CONFIG ===== */}
         {tab === "config" && config && (
           <div className="space-y-6 max-w-4xl">
@@ -605,6 +807,221 @@ function StatCard({
       <div className="text-3xl font-bold font-display">{value}</div>
       <div className="text-sm text-gray-600 mt-1">{label}</div>
       {sub && <div className="text-xs text-gray-400 mt-0.5">{sub}</div>}
+    </div>
+  );
+}
+
+/* ===================== AGENDAMENTO ===================== */
+const PLATFORM_META: Record<SocialPlatform, { label: string; icon: any; color: string }> = {
+  instagram: { label: "Instagram", icon: Instagram, color: "bg-pink-100 text-pink-700" },
+  youtube: { label: "YouTube", icon: Youtube, color: "bg-red-100 text-red-700" },
+  tiktok: { label: "TikTok", icon: Share2, color: "bg-gray-900 text-white" },
+};
+
+function toLocalInput(ts: number) {
+  const d = new Date(ts);
+  const off = d.getTimezoneOffset();
+  return new Date(ts - off * 60000).toISOString().slice(0, 16);
+}
+
+function ScheduleTab({
+  posts,
+  onCreate,
+  onUpdate,
+  onDelete,
+  saveMsg,
+}: {
+  posts: ScheduledPost[];
+  onCreate: (p: Partial<ScheduledPost>) => void;
+  onUpdate: (p: ScheduledPost) => void;
+  onDelete: (id: string) => void;
+  saveMsg: { type: "ok" | "err"; text: string } | null;
+}) {
+  const [title, setTitle] = useState("");
+  const [caption, setCaption] = useState("");
+  const [when, setWhen] = useState(toLocalInput(Date.now() + 60 * 60 * 1000));
+  const [platforms, setPlatforms] = useState<SocialPlatform[]>(["instagram"]);
+
+  function togglePlatform(p: SocialPlatform) {
+    setPlatforms((cur) => (cur.includes(p) ? cur.filter((x) => x !== p) : [...cur, p]));
+  }
+
+  function submit() {
+    if (!title.trim()) return;
+    onCreate({
+      title,
+      caption,
+      scheduledFor: new Date(when).getTime(),
+      platforms,
+      status: "scheduled",
+    });
+    setTitle("");
+    setCaption("");
+    setPlatforms(["instagram"]);
+    setWhen(toLocalInput(Date.now() + 60 * 60 * 1000));
+  }
+
+  const now = Date.now();
+  const upcoming = posts.filter((p) => p.scheduledFor >= now || p.status === "scheduled");
+  const past = posts.filter((p) => p.scheduledFor < now && p.status !== "scheduled");
+
+  return (
+    <div className="space-y-6 max-w-5xl">
+      {saveMsg && (
+        <div className={`rounded-xl px-4 py-3 text-sm flex items-center gap-2 ${saveMsg.type === "ok" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
+          {saveMsg.type === "ok" ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+          {saveMsg.text}
+        </div>
+      )}
+
+      {/* Formulário de nova postagem */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <h3 className="font-display font-bold text-lg mb-1 flex items-center gap-2">
+          <Plus size={20} className="text-primary-500" /> Agendar nova postagem
+        </h3>
+        <p className="text-sm text-gray-500 mb-5">
+          Planeje o conteúdo viral diário do Tedh e escolha em quais redes postar.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Título / ideia do post</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ex: Tedh explica body doubling em 30s"
+              className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 focus:border-primary-500 outline-none"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Legenda / roteiro</label>
+            <textarea
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              rows={3}
+              placeholder="Escreva a legenda, hashtags e o roteiro do vídeo..."
+              className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 focus:border-primary-500 outline-none text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Data e hora</label>
+            <input
+              type="datetime-local"
+              value={when}
+              onChange={(e) => setWhen(e.target.value)}
+              className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 focus:border-primary-500 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Redes</label>
+            <div className="flex gap-2 flex-wrap">
+              {(Object.keys(PLATFORM_META) as SocialPlatform[]).map((p) => {
+                const meta = PLATFORM_META[p];
+                const Icon = meta.icon;
+                const active = platforms.includes(p);
+                return (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => togglePlatform(p)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border-2 transition-colors ${
+                      active ? "border-primary-500 bg-primary-50 text-primary-700" : "border-gray-200 text-gray-500"
+                    }`}
+                  >
+                    <Icon size={15} /> {meta.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <button onClick={submit} disabled={!title.trim()} className="btn-primary mt-5 !py-3 disabled:opacity-50">
+          <Calendar size={18} /> Agendar postagem
+        </button>
+      </div>
+
+      {/* Lista de postagens */}
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+          <Clock size={18} className="text-secondary-500" />
+          <h3 className="font-display font-bold text-lg">Calendário de postagens</h3>
+        </div>
+        <div className="divide-y divide-gray-50">
+          {posts.length === 0 && (
+            <div className="px-6 py-12 text-center text-gray-400">
+              Nenhuma postagem agendada. Bora alimentar o feed do Tedh! 🚀
+            </div>
+          )}
+          {[...upcoming, ...past].map((p) => (
+            <PostRow key={p.id} post={p} onUpdate={onUpdate} onDelete={onDelete} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PostRow({
+  post,
+  onUpdate,
+  onDelete,
+}: {
+  post: ScheduledPost;
+  onUpdate: (p: ScheduledPost) => void;
+  onDelete: (id: string) => void;
+}) {
+  const date = new Date(post.scheduledFor);
+  const statusMeta: Record<string, { label: string; cls: string }> = {
+    scheduled: { label: "Agendado", cls: "bg-blue-100 text-blue-700" },
+    published: { label: "Publicado", cls: "bg-green-100 text-green-700" },
+    draft: { label: "Rascunho", cls: "bg-gray-100 text-gray-600" },
+  };
+  const sm = statusMeta[post.status];
+
+  return (
+    <div className="px-6 py-4 flex items-start gap-4 hover:bg-gray-50">
+      <div className="flex-shrink-0 w-14 text-center">
+        <div className="text-2xl font-bold font-display text-primary-600">{date.getDate()}</div>
+        <div className="text-xs text-gray-500 uppercase">
+          {date.toLocaleDateString("pt-BR", { month: "short" })}
+        </div>
+        <div className="text-xs text-gray-400 mt-0.5">
+          {date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+        </div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap mb-1">
+          <span className="font-semibold text-gray-800">{post.title}</span>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sm.cls}`}>{sm.label}</span>
+        </div>
+        {post.caption && <p className="text-sm text-gray-500 line-clamp-2">{post.caption}</p>}
+        <div className="flex gap-1.5 mt-2">
+          {post.platforms.map((pl) => {
+            const meta = PLATFORM_META[pl];
+            const Icon = meta.icon;
+            return (
+              <span key={pl} className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${meta.color}`}>
+                <Icon size={12} /> {meta.label}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+      <div className="flex flex-col gap-1.5 flex-shrink-0">
+        <select
+          value={post.status}
+          onChange={(e) => onUpdate({ ...post, status: e.target.value as any })}
+          className="text-xs rounded-lg border border-gray-200 px-2 py-1 outline-none focus:border-primary-500"
+        >
+          <option value="scheduled">Agendado</option>
+          <option value="published">Publicado</option>
+          <option value="draft">Rascunho</option>
+        </select>
+        <button onClick={() => onDelete(post.id)} className="text-red-500 hover:bg-red-50 rounded-lg p-1.5 self-end" title="Excluir">
+          <Trash2 size={15} />
+        </button>
+      </div>
     </div>
   );
 }

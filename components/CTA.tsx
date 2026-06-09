@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Instagram } from "lucide-react";
 import Tedhy from "./Tedhy";
+import type { SocialLinks } from "@/lib/types";
 
-export default function CTA() {
+export default function CTA({ social, tedhImageUrl }: { social?: SocialLinks; tedhImageUrl?: string }) {
   return (
     <section className="py-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">
@@ -27,10 +28,23 @@ export default function CTA() {
                 Em 5 minutos você está sintonizado. Sem cartão de crédito para
                 testar. Sem letra miúda. Sem julgamento.
               </p>
-              <a href="#planos" className="inline-flex items-center gap-2 bg-white text-primary-600 font-bold px-8 py-4 rounded-full shadow-xl hover:scale-105 transition-transform">
-                Quero começar agora
-                <ArrowRight size={20} />
-              </a>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a href="#planos" className="inline-flex items-center justify-center gap-2 bg-white text-primary-600 font-bold px-8 py-4 rounded-full shadow-xl hover:scale-105 transition-transform">
+                  Quero começar agora
+                  <ArrowRight size={20} />
+                </a>
+                {social?.instagram && (
+                  <a
+                    href={social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 bg-white/15 backdrop-blur-sm text-white font-bold px-6 py-4 rounded-full ring-2 ring-white/40 hover:bg-white/25 transition-colors"
+                  >
+                    <Instagram size={20} />
+                    Seguir no Instagram
+                  </a>
+                )}
+              </div>
               <p className="text-white/80 text-sm mt-4">
                 ⏱️ Leva menos de 3 minutos · 🔒 100% seguro · 💝 7 dias de
                 garantia
@@ -38,7 +52,7 @@ export default function CTA() {
             </div>
 
             <div className="hidden lg:flex justify-center">
-              <Tedhy size={300} expression="excited" />
+              <Tedhy size={280} expression="excited" imageUrl={tedhImageUrl} limbs />
             </div>
           </div>
 

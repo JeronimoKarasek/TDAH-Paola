@@ -1,6 +1,11 @@
 # 🧠 Sintonize TDAH
 
-> Organize sua mente, conquiste seu dia. Página de vendas + dashboard administrativo para um SaaS focado em pessoas com TDAH, com o mascote **Tedhy** (um cérebro de óculos animado).
+> **O problema nunca foi você. Foi a falta de um método.**
+> Página de vendas + sistema administrativo completo para um SaaS focado em pessoas com **TDAH e autismo**, com o mascote oficial **Tedh** (um cérebro de óculos roxos, com braços e perninhas animadas).
+
+## 🦸 A história do Tedh
+
+O Tedh é um cérebro como o de quem é neurodivergente: cheio de ideias, mil abas abertas e uma energia que ninguém entendia. Por anos ouviu que era "preguiçoso" e "desorganizado", até descobrir a verdade que muda tudo: **o problema nunca foi ele — faltava um método feito para o jeito TDAH/autista de funcionar.** Então colocou os óculos e criou o Sintonize TDAH. Hoje ele caminha ao seu lado, lembrando: *você não está atrasado, você só estava sem direção.*
 
 ![Stack](https://img.shields.io/badge/Next.js-14-black) ![TS](https://img.shields.io/badge/TypeScript-5-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-3-cyan)
 
@@ -20,6 +25,9 @@
   - Editor visual dos planos (preços, descrição, benefícios, badges)
   - Configuração da **chave de API Asaas** (sandbox/produção)
   - Edição do título e subtítulo do hero
+  - 🖼️ **Upload da imagem do Tedh** (troque o mascote por uma imagem custom)
+  - 🔗 **Gerenciador de redes sociais** (Instagram, YouTube, TikTok, WhatsApp, e-mail)
+  - 📅 **Agendamento de postagens diárias** com escolha de redes (Instagram/YouTube/TikTok) e status
 - 💳 **Integração Asaas** completa (cria customer + subscription + retorna `invoiceUrl`)
 - 📊 **Tracking automático** de visitantes com geolocalização via `ip-api.com`
 - 🚀 **Pronto para Vercel** (zero configuração necessária)
