@@ -172,7 +172,7 @@ export default function AdminDashboard({ user }: { user: string }) {
     }
   }
 
-  // ===== Upload da imagem do Tedh =====
+  // ===== Upload da imagem do Tedhy =====
   async function uploadTedhImage(file: File) {
     if (!config) return;
     setUploading(true);
@@ -183,7 +183,7 @@ export default function AdminDashboard({ user }: { user: string }) {
       const data = await res.json();
       if (data.ok) {
         setConfig({ ...config, tedhImageUrl: data.tedhImageUrl });
-        flash("ok", "Imagem do Tedh atualizada! 🧠✨");
+        flash("ok", "Imagem do Tedhy atualizada! 🧠✨");
       } else {
         flash("err", data.error || "Falha no upload.");
       }
@@ -200,7 +200,7 @@ export default function AdminDashboard({ user }: { user: string }) {
     const data = await res.json();
     if (data.ok) {
       setConfig({ ...config, tedhImageUrl: "" });
-      flash("ok", "Voltamos ao Tedh original (SVG animado).");
+      flash("ok", "Voltamos ao Tedhy original (SVG animado).");
     }
   }
 
@@ -304,7 +304,7 @@ export default function AdminDashboard({ user }: { user: string }) {
             { id: "overview", label: "Visão geral", icon: TrendingUp },
             { id: "visitors", label: "Visitantes", icon: Users },
             { id: "leads", label: "Leads / Vendas", icon: Mail },
-            { id: "tedh", label: "Tedh (mascote)", icon: ImageIcon },
+            { id: "tedh", label: "Tedhy (mascote)", icon: ImageIcon },
             { id: "social", label: "Redes sociais", icon: Share2 },
             { id: "schedule", label: "Agendamento", icon: Calendar },
             { id: "config", label: "Configurações", icon: Settings },
@@ -521,12 +521,12 @@ export default function AdminDashboard({ user }: { user: string }) {
             )}
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="font-display font-bold text-lg mb-1 flex items-center gap-2">
-                <ImageIcon size={20} className="text-primary-500" /> Imagem oficial do Tedh
+                <ImageIcon size={20} className="text-primary-500" /> Imagem oficial do Tedhy
               </h3>
               <p className="text-sm text-gray-500 mb-6">
-                Envie uma imagem do Tedh para substituir o mascote em todo o site
+                Envie uma imagem do Tedhy para substituir o mascote em todo o site
                 (PNG, JPG, WEBP, GIF ou SVG — máx. 2MB). Deixe vazio para usar o
-                Tedh animado padrão.
+                Tedhy animado padrão.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 items-center">
@@ -555,12 +555,12 @@ export default function AdminDashboard({ user }: { user: string }) {
                       onClick={removeTedhImage}
                       className="block text-sm text-red-500 hover:text-red-600 font-medium inline-flex items-center gap-1"
                     >
-                      <Trash2 size={15} /> Remover imagem e voltar ao Tedh padrão
+                      <Trash2 size={15} /> Remover imagem e voltar ao Tedhy padrão
                     </button>
                   )}
                   <p className="text-xs text-gray-400">
                     💡 Dica: use uma imagem com fundo transparente (PNG) para o
-                    Tedh ficar perfeito sobre qualquer fundo.
+                    Tedhy ficar perfeito sobre qualquer fundo.
                   </p>
                 </div>
               </div>
@@ -880,7 +880,7 @@ function ScheduleTab({
           <Plus size={20} className="text-primary-500" /> Agendar nova postagem
         </h3>
         <p className="text-sm text-gray-500 mb-5">
-          Planeje o conteúdo viral diário do Tedh e escolha em quais redes postar.
+          Planeje o conteúdo viral diário do Tedhy e escolha em quais redes postar.
         </p>
 
         <div className="grid sm:grid-cols-2 gap-4">
@@ -889,7 +889,7 @@ function ScheduleTab({
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Tedh explica body doubling em 30s"
+              placeholder="Ex: Tedhy explica body doubling em 30s"
               className="w-full rounded-xl border-2 border-gray-200 px-4 py-2.5 focus:border-primary-500 outline-none"
             />
           </div>
@@ -950,7 +950,7 @@ function ScheduleTab({
         <div className="divide-y divide-gray-50">
           {posts.length === 0 && (
             <div className="px-6 py-12 text-center text-gray-400">
-              Nenhuma postagem agendada. Bora alimentar o feed do Tedh! 🚀
+              Nenhuma postagem agendada. Bora alimentar o feed do Tedhy! 🚀
             </div>
           )}
           {[...upcoming, ...past].map((p) => (

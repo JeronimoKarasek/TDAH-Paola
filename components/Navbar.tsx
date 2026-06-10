@@ -22,7 +22,7 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
 
   const links = [
     { href: "#beneficios", label: "Por que funciona" },
-    { href: "#historia", label: "Conheça o Tedh" },
+    { href: "#historia", label: "Conheça o Tedhy" },
     { href: "#como-funciona", label: "Como funciona" },
     { href: "#planos", label: "Planos" },
     { href: "#faq", label: "FAQ" },

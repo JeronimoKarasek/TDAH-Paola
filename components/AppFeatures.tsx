@@ -29,7 +29,7 @@ const features = [
   {
     icon: ListChecks,
     title: "Quebra de tarefas automática",
-    desc: "Diga 'limpar a casa' e o Tedh divide em micro-passos de 2–5 min. Sem paralisia: só o próximo passinho de cada vez.",
+    desc: "Diga 'limpar a casa' e o Tedhy divide em micro-passos de 2–5 min. Sem paralisia: só o próximo passinho de cada vez.",
     color: "from-purple-500 to-fuchsia-500",
   },
   {
@@ -47,13 +47,13 @@ const features = [
   {
     icon: Brain,
     title: "Brain Dump rápido",
-    desc: "Mil ideias na cabeça? Despeje tudo num toque (ou por voz) e o Tedh organiza depois. Liberte a mente do peso de lembrar.",
+    desc: "Mil ideias na cabeça? Despeje tudo num toque (ou por voz) e o Tedhy organiza depois. Liberte a mente do peso de lembrar.",
     color: "from-rose-500 to-orange-500",
   },
   {
     icon: Bell,
     title: "Lembretes que não dão pra ignorar",
-    desc: "Notificações carinhosas, repetidas e contextuais — com áudio do Tedh. Feitos para vencer o 'esqueci totalmente'.",
+    desc: "Notificações carinhosas, repetidas e contextuais — com áudio do Tedhy. Feitos para vencer o 'esqueci totalmente'.",
     color: "from-amber-500 to-yellow-500",
   },
   {
@@ -66,7 +66,7 @@ const features = [
   {
     icon: Mic,
     title: "Tudo por voz",
-    desc: "Fale com o Tedh para criar tarefas, anotar e planejar o dia. Para quando digitar parece um Everest.",
+    desc: "Fale com o Tedhy para criar tarefas, anotar e planejar o dia. Para quando digitar parece um Everest.",
     color: "from-sky-500 to-cyan-500",
   },
   {

@@ -5,12 +5,12 @@ import { saveConfig } from "@/lib/config";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Limite de ~2MB para a imagem do Tedh (armazenada como data URL no config)
+// Limite de ~2MB para a imagem do Tedhy (armazenada como data URL no config)
 const MAX_BYTES = 2 * 1024 * 1024;
 const ALLOWED = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/svg+xml"];
 
 /**
- * Upload da imagem oficial do Tedh.
+ * Upload da imagem oficial do Tedhy.
  * Aceita multipart/form-data (campo `file`) e salva como data URL no config,
  * funcionando inclusive no ambiente serverless da Vercel.
  */
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/** Remove a imagem custom, voltando ao Tedh em SVG */
+/** Remove a imagem custom, voltando ao Tedhy em SVG */
 export async function DELETE(req: NextRequest) {
   const session = getSessionFromRequest(req);
   if (!session) {

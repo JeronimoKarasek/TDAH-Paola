@@ -41,7 +41,7 @@ export default function Footer({ tedhImageUrl, social }: FooterProps) {
               </span>
             </div>
             <p className="text-sm text-gray-400">
-              O problema nunca foi você. Com o Tedh e o método certo, sua mente
+              O problema nunca foi você. Com o Tedhy e o método certo, sua mente
               neurodivergente vira a sua maior vantagem. 💜
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function Footer({ tedhImageUrl, social }: FooterProps) {
             <h4 className="font-display font-bold text-white mb-3">Produto</h4>
             <ul className="space-y-2 text-sm">
               <li><a href="#beneficios" className="hover:text-primary-400">Por que funciona</a></li>
-              <li><a href="#historia" className="hover:text-primary-400">Conheça o Tedh</a></li>
+              <li><a href="#historia" className="hover:text-primary-400">Conheça o Tedhy</a></li>
               <li><a href="#planos" className="hover:text-primary-400">Planos</a></li>
               <li><a href="#faq" className="hover:text-primary-400">FAQ</a></li>
             </ul>
