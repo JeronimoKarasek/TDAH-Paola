@@ -37,12 +37,44 @@ export interface Plan {
   color: string;
 }
 
+export interface SocialLinks {
+  instagram: string;
+  youtube: string;
+  tiktok: string;
+  whatsapp: string;
+  email: string;
+}
+
+/** Plataforma de uma postagem agendada */
+export type SocialPlatform = "instagram" | "youtube" | "tiktok";
+
+export type PostStatus = "scheduled" | "published" | "draft";
+
+export interface ScheduledPost {
+  id: string;
+  title: string;
+  caption: string;
+  /** Data/hora de publicação (timestamp em ms) */
+  scheduledFor: number;
+  /** Em quais redes deve ser postado */
+  platforms: SocialPlatform[];
+  status: PostStatus;
+  /** URL opcional de uma imagem/thumbnail */
+  mediaUrl?: string;
+  createdAt: number;
+}
+
 export interface SiteConfig {
   asaasApiKey: string;
   asaasEnv: "production" | "sandbox";
   plans: Plan[];
   heroTitle: string;
   heroSubtitle: string;
+  /** Imagem custom do Tedh (data URL ou caminho), enviada pelo admin */
+  tedhImageUrl: string;
+  social: SocialLinks;
+  /** Calendário de postagens diárias nas redes */
+  posts: ScheduledPost[];
   updatedAt: number;
 }
 
@@ -103,12 +135,23 @@ export const DEFAULT_PLANS: Plan[] = [
   },
 ];
 
+export const DEFAULT_SOCIAL: SocialLinks = {
+  instagram: "https://www.instagram.com/sintonize_tdah/",
+  youtube: "",
+  tiktok: "",
+  whatsapp: "",
+  email: "contato@sintonizetdah.com.br",
+};
+
 export const DEFAULT_CONFIG: SiteConfig = {
   asaasApiKey: "",
   asaasEnv: "sandbox",
   plans: DEFAULT_PLANS,
-  heroTitle: "Organize sua mente, conquiste seu dia",
+  heroTitle: "O problema nunca foi você. Foi a falta de um método.",
   heroSubtitle:
-    "O Sintonize TDAH foi feito por e para mentes neurodivergentes. Junto com o Tedhy, você transforma o caos em foco e o foco em conquistas.",
+    "Sua mente TDAH não precisa de conserto — precisa de direção. Com o Tedh ao seu lado, você transforma o caos em foco, o foco em hábito e o hábito em uma vida com mais felicidade e conquistas.",
+  tedhImageUrl: "",
+  social: DEFAULT_SOCIAL,
+  posts: [],
   updatedAt: Date.now(),
 };

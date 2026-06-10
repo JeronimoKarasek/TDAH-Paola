@@ -1,14 +1,21 @@
 import { readJSON, writeJSON } from "./storage";
-import { DEFAULT_CONFIG, SiteConfig } from "./types";
+import { DEFAULT_CONFIG, DEFAULT_SOCIAL, SiteConfig } from "./types";
 
 const FILE = "config.json";
 
 export function getConfig(): SiteConfig {
   const cfg = readJSON<SiteConfig>(FILE, DEFAULT_CONFIG);
-  // ensure plans are present (in case the saved file is older)
+  // Migração: garante que campos novos existam em configs antigas
   if (!cfg.plans || cfg.plans.length === 0) {
     cfg.plans = DEFAULT_CONFIG.plans;
   }
+  if (!cfg.social) {
+    cfg.social = { ...DEFAULT_SOCIAL };
+  } else {
+    cfg.social = { ...DEFAULT_SOCIAL, ...cfg.social };
+  }
+  if (typeof cfg.tedhImageUrl !== "string") cfg.tedhImageUrl = "";
+  if (!Array.isArray(cfg.posts)) cfg.posts = [];
   return cfg;
 }
 
@@ -32,5 +39,7 @@ export function getPublicConfig() {
     plans: cfg.plans,
     heroTitle: cfg.heroTitle,
     heroSubtitle: cfg.heroSubtitle,
+    tedhImageUrl: cfg.tedhImageUrl,
+    social: cfg.social,
   };
 }

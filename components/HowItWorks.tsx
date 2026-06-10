@@ -31,7 +31,7 @@ const steps = [
   },
 ];
 
-export default function HowItWorks() {
+export default function HowItWorks({ tedhImageUrl }: { tedhImageUrl?: string }) {
   return (
     <section
       id="como-funciona"
@@ -87,7 +87,7 @@ export default function HowItWorks() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary-200 to-secondary-200 rounded-3xl blur-3xl opacity-50" />
             <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
               <div className="flex justify-center mb-6">
-                <Tedhy size={200} expression="wink" />
+                <Tedhy size={200} expression="wink" imageUrl={tedhImageUrl} />
               </div>
               <div className="space-y-3">
                 {[

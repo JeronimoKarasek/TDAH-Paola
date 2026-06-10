@@ -45,6 +45,19 @@ export async function PUT(req: NextRequest) {
   }
   if (typeof body.heroTitle === "string") update.heroTitle = body.heroTitle;
   if (typeof body.heroSubtitle === "string") update.heroSubtitle = body.heroSubtitle;
+  if (typeof body.tedhImageUrl === "string") update.tedhImageUrl = body.tedhImageUrl;
+  if (body.social && typeof body.social === "object") {
+    update.social = {
+      instagram: String(body.social.instagram || ""),
+      youtube: String(body.social.youtube || ""),
+      tiktok: String(body.social.tiktok || ""),
+      whatsapp: String(body.social.whatsapp || ""),
+      email: String(body.social.email || ""),
+    };
+  }
+  if (Array.isArray(body.posts)) {
+    update.posts = body.posts;
+  }
 
   const saved = saveConfig(update);
   return NextResponse.json({

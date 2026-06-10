@@ -1,7 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Benefits from "@/components/Benefits";
+import TedhStory from "@/components/TedhStory";
 import HowItWorks from "@/components/HowItWorks";
+import AppFeatures from "@/components/AppFeatures";
 import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
@@ -17,15 +19,22 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden">
       <Tracker />
-      <Navbar />
-      <Hero title={cfg.heroTitle} subtitle={cfg.heroSubtitle} />
+      <Navbar tedhImageUrl={cfg.tedhImageUrl} social={cfg.social} />
+      <Hero
+        title={cfg.heroTitle}
+        subtitle={cfg.heroSubtitle}
+        tedhImageUrl={cfg.tedhImageUrl}
+        social={cfg.social}
+      />
       <Benefits />
-      <HowItWorks />
+      <TedhStory tedhImageUrl={cfg.tedhImageUrl} />
+      <HowItWorks tedhImageUrl={cfg.tedhImageUrl} />
+      <AppFeatures />
       <Pricing plans={cfg.plans} />
       <Testimonials />
-      <CTA />
+      <CTA social={cfg.social} />
       <FAQ />
-      <Footer />
+      <Footer tedhImageUrl={cfg.tedhImageUrl} social={cfg.social} />
     </main>
   );
 }
