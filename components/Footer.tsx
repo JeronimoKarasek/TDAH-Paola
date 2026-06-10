@@ -20,7 +20,7 @@ interface FooterProps {
 
 export default function Footer({ tedhImageUrl, social }: FooterProps) {
   const socials = [
-    social?.instagram && { href: social.instagram, icon: Instagram, label: "Instagram" },
+    { href: social?.instagram || "https://www.instagram.com/sintonize_tdah/", icon: Instagram, label: "Instagram" },
     social?.youtube && { href: social.youtube, icon: Youtube, label: "YouTube" },
     social?.tiktok && { href: social.tiktok, icon: TikTokIcon, label: "TikTok" },
     social?.whatsapp && { href: social.whatsapp, icon: MessageCircle, label: "WhatsApp" },

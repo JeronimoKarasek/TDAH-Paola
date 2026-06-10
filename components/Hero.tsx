@@ -13,6 +13,7 @@ interface HeroProps {
 }
 
 export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProps) {
+  const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
   return (
     <section
       id="top"
@@ -73,19 +74,15 @@ export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProp
             </a>
           </div>
 
-          {social?.instagram && (
-            <a
-              href={social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-secondary-600 hover:text-secondary-700"
-            >
-              <span className="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white">
-                <Instagram size={15} />
-              </span>
-              Acompanhe o Tedhy no Instagram
-            </a>
-          )}
+          <a
+            href={instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
+          >
+            <Instagram size={18} />
+            Seguir o Tedhy no Instagram
+          </a>
 
           <div className="mt-10 flex flex-wrap gap-8 justify-center lg:justify-start text-sm text-gray-600">
             <div className="flex items-center gap-2">

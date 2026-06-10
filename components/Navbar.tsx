@@ -28,7 +28,8 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
     { href: "#faq", label: "FAQ" },
   ];
 
-  const instagram = social?.instagram;
+  // Sempre exibe o botão do Instagram — usa o perfil oficial como fallback
+  const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
 
   return (
     <header
