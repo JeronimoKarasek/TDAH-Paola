@@ -83,7 +83,7 @@ export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProp
               <span className="w-7 h-7 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center text-white">
                 <Instagram size={15} />
               </span>
-              Acompanhe o Tedh no Instagram
+              Acompanhe o Tedhy no Instagram
             </a>
           )}
 

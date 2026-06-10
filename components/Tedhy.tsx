@@ -3,14 +3,17 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+/** Imagem oficial do Tedh (mascote padrão). O upload do /admin tem prioridade sobre ela. */
+export const TEDH_OFFICIAL_IMAGE = "/tedh-oficial.webp";
+
 interface TedhyProps {
   size?: number;
   expression?: "happy" | "wink" | "excited" | "focused";
   floating?: boolean;
   className?: string;
-  /** Quando o admin envia uma imagem custom do Tedh, ela tem prioridade sobre o SVG */
+  /** Quando o admin envia uma imagem custom do Tedh, ela tem prioridade sobre o padrão */
   imageUrl?: string | null;
-  /** Mostra bracinhos e perninhas animados (mascote completo) */
+  /** Mostra bracinhos e perninhas animados — só vale para o Tedh em SVG (a imagem oficial já tem corpo) */
   limbs?: boolean;
 }
 
@@ -30,11 +33,15 @@ export default function Tedhy({
   imageUrl = null,
   limbs = false,
 }: TedhyProps) {
-  // Evita mismatch de hidratação ao escolher imagem custom
+  // Evita mismatch de hidratação ao escolher imagem
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const useCustom = mounted && !!imageUrl;
+  // Fonte da imagem: custom do admin > imagem oficial padrão
+  const src = imageUrl || TEDH_OFFICIAL_IMAGE;
+  const useImage = mounted && !!src;
+  // A imagem oficial já tem braços/pernas — só mostramos os do SVG quando NÃO há imagem
+  const showLimbs = limbs && !useImage;
 
   return (
     <motion.div
@@ -55,7 +62,7 @@ export default function Tedhy({
       }}
     >
       {/* ===== BRAÇOS (atrás do corpo) ===== */}
-      {limbs && (
+      {showLimbs && (
         <>
           {/* braço esquerdo — acena */}
           <motion.div
@@ -90,14 +97,14 @@ export default function Tedhy({
         </>
       )}
 
-      {/* ===== CORPO (SVG ou imagem custom) ===== */}
+      {/* ===== CORPO (imagem oficial/custom ou SVG fallback) ===== */}
       <div className="relative z-10 w-full h-full">
-        {useCustom ? (
+        {useImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={imageUrl!}
+            src={src}
             alt="Tedh, o mascote do Sintonize TDAH"
-            className="w-full h-full object-contain drop-shadow-2xl"
+            className="w-full h-full object-cover rounded-[18%] drop-shadow-2xl"
           />
         ) : (
           <BrainSvg expression={expression} />
@@ -105,7 +112,7 @@ export default function Tedhy({
       </div>
 
       {/* ===== PERNAS (à frente, na base) ===== */}
-      {limbs && (
+      {showLimbs && (
         <>
           {/* perna esquerda */}
           <motion.div

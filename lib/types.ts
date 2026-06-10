@@ -70,7 +70,7 @@ export interface SiteConfig {
   plans: Plan[];
   heroTitle: string;
   heroSubtitle: string;
-  /** Imagem custom do Tedh (data URL ou caminho), enviada pelo admin */
+  /** Imagem custom do Tedhy (data URL ou caminho), enviada pelo admin */
   tedhImageUrl: string;
   social: SocialLinks;
   /** Calendário de postagens diárias nas redes */
@@ -149,7 +149,7 @@ export const DEFAULT_CONFIG: SiteConfig = {
   plans: DEFAULT_PLANS,
   heroTitle: "O problema nunca foi você. Foi a falta de um método.",
   heroSubtitle:
-    "Sua mente TDAH não precisa de conserto — precisa de direção. Com o Tedh ao seu lado, você transforma o caos em foco, o foco em hábito e o hábito em uma vida com mais felicidade e conquistas.",
+    "Sua mente TDAH não precisa de conserto — precisa de direção. Com o Tedhy ao seu lado, você transforma o caos em foco, o foco em hábito e o hábito em uma vida com mais felicidade e conquistas.",
   tedhImageUrl: "",
   social: DEFAULT_SOCIAL,
   posts: [],
