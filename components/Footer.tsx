@@ -19,12 +19,17 @@ interface FooterProps {
 }
 
 export default function Footer({ tedhImageUrl, social }: FooterProps) {
+  // Monta a lista de redes 100% a partir do que está salvo no /admin.
+  // Cada ícone só aparece se houver um link/valor correspondente salvo.
+  // (Instagram tem o perfil oficial como fallback, conforme estratégia.)
+  const igHref = social?.instagram?.trim() || "https://www.instagram.com/sintonize_tdah/";
+
   const socials = [
-    { href: social?.instagram || "https://www.instagram.com/sintonize_tdah/", icon: Instagram, label: "Instagram" },
-    social?.youtube && { href: social.youtube, icon: Youtube, label: "YouTube" },
-    social?.tiktok && { href: social.tiktok, icon: TikTokIcon, label: "TikTok" },
-    social?.whatsapp && { href: social.whatsapp, icon: MessageCircle, label: "WhatsApp" },
-    social?.email && { href: `mailto:${social.email}`, icon: Mail, label: "E-mail" },
+    { href: igHref, icon: Instagram, label: "Instagram" },
+    social?.youtube?.trim() && { href: social.youtube.trim(), icon: Youtube, label: "YouTube" },
+    social?.tiktok?.trim() && { href: social.tiktok.trim(), icon: TikTokIcon, label: "TikTok" },
+    social?.whatsapp?.trim() && { href: social.whatsapp.trim(), icon: MessageCircle, label: "WhatsApp" },
+    social?.email?.trim() && { href: `mailto:${social.email.trim()}`, icon: Mail, label: "E-mail" },
   ].filter(Boolean) as { href: string; icon: any; label: string }[];
 
   return (

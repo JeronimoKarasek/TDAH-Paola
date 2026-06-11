@@ -6,8 +6,8 @@ import Tedhy from "./Tedhy";
 import type { SocialLinks } from "@/lib/types";
 
 export default function CTA({ social, tedhImageUrl }: { social?: SocialLinks; tedhImageUrl?: string }) {
-  const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
-  const youtube = social?.youtube;
+  const instagram = social?.instagram?.trim() || "https://www.instagram.com/sintonize_tdah/";
+  const youtube = social?.youtube?.trim();
   return (
     <section className="py-20 px-4 sm:px-6">
       <div className="max-w-5xl mx-auto">

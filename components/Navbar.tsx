@@ -29,8 +29,8 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
   ];
 
   // Sempre exibe o botão do Instagram — usa o perfil oficial como fallback
-  const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
-  const youtube = social?.youtube;
+  const instagram = social?.instagram?.trim() || "https://www.instagram.com/sintonize_tdah/";
+  const youtube = social?.youtube?.trim();
 
   return (
     <header
@@ -80,8 +80,11 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
               <Youtube size={18} />
             </a>
           )}
-          <a href="#planos" className="btn-primary !px-6 !py-2.5 text-sm">
-            Quero começar
+          <a href="/app" className="font-medium text-gray-700 hover:text-primary-500 transition-colors">
+            Entrar
+          </a>
+          <a href="/app" className="btn-primary !px-6 !py-2.5 text-sm">
+            Criar conta
           </a>
         </div>
 

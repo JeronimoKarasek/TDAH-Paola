@@ -13,8 +13,8 @@ interface HeroProps {
 }
 
 export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProps) {
-  const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
-  const youtube = social?.youtube;
+  const instagram = social?.instagram?.trim() || "https://www.instagram.com/sintonize_tdah/";
+  const youtube = social?.youtube?.trim();
   return (
     <section
       id="top"
