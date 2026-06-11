@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Zap, ArrowRight, Instagram } from "lucide-react";
+import { Sparkles, Zap, ArrowRight, Instagram, Youtube } from "lucide-react";
 import Tedhy from "./Tedhy";
 import type { SocialLinks } from "@/lib/types";
 
@@ -14,6 +14,7 @@ interface HeroProps {
 
 export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProps) {
   const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
+  const youtube = social?.youtube;
   return (
     <section
       id="top"
@@ -74,15 +75,28 @@ export default function Hero({ title, subtitle, tedhImageUrl, social }: HeroProp
             </a>
           </div>
 
-          <a
-            href={instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
-          >
-            <Instagram size={18} />
-            Seguir o Tedhy no Instagram
-          </a>
+          <div className="mt-5 flex flex-wrap gap-3 justify-center lg:justify-start">
+            <a
+              href={instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
+            >
+              <Instagram size={18} />
+              Seguir o Tedhy no Instagram
+            </a>
+            {youtube && (
+              <a
+                href={youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-105"
+              >
+                <Youtube size={18} />
+                Inscreva-se no YouTube
+              </a>
+            )}
+          </div>
 
           <div className="mt-10 flex flex-wrap gap-8 justify-center lg:justify-start text-sm text-gray-600">
             <div className="flex items-center gap-2">

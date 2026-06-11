@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Instagram } from "lucide-react";
+import { Menu, X, Instagram, Youtube } from "lucide-react";
 import Tedhy from "./Tedhy";
 import type { SocialLinks } from "@/lib/types";
 
@@ -30,6 +30,7 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
 
   // Sempre exibe o botão do Instagram — usa o perfil oficial como fallback
   const instagram = social?.instagram || "https://www.instagram.com/sintonize_tdah/";
+  const youtube = social?.youtube;
 
   return (
     <header
@@ -68,6 +69,17 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
               <Instagram size={18} />
             </a>
           )}
+          {youtube && (
+            <a
+              href={youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+              className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white shadow-md hover:scale-110 transition-transform"
+            >
+              <Youtube size={18} />
+            </a>
+          )}
           <a href="#planos" className="btn-primary !px-6 !py-2.5 text-sm">
             Quero começar
           </a>
@@ -103,6 +115,17 @@ export default function Navbar({ tedhImageUrl, social }: NavbarProps) {
               className="flex items-center gap-2 py-2 font-medium text-gray-700 hover:text-primary-500"
             >
               <Instagram size={18} /> Siga no Instagram
+            </a>
+          )}
+          {youtube && (
+            <a
+              href={youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 py-2 font-medium text-gray-700 hover:text-primary-500"
+            >
+              <Youtube size={18} /> Inscreva-se no YouTube
             </a>
           )}
           <a
